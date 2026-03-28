@@ -1,48 +1,514 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>antine</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antine</title>
   <style>
+    :root {
+      --ivory: #f3efe8;
+      --deep-red: #5b2324;
+      --forest: #1f3a30;
+      --oak: #5b4637;
+      --ink: #231b18;
+      --mist: rgba(255, 255, 255, 0.22);
+      --line: rgba(255, 255, 255, 0.45);
+      --panel: rgba(246, 240, 231, 0.74);
+      --ease: cubic-bezier(0.2, 0.85, 0.2, 1.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
     body {
-      background-color: #0f1117;
-      color: #e6e6e6;
-      font-family: monospace;
-      text-align: center;
-      margin-top: 100px;
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      color: var(--ink);
+      overflow: hidden;
+      font-family: "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif;
+      background:
+        radial-gradient(1200px 650px at 12% 12%, rgba(91, 35, 36, 0.4), transparent 62%),
+        radial-gradient(900px 520px at 92% 90%, rgba(31, 58, 48, 0.32), transparent 64%),
+        radial-gradient(1000px 600px at 58% 40%, rgba(91, 70, 55, 0.26), transparent 68%),
+        linear-gradient(165deg, #f5f1ea 0%, #ede4d8 44%, #e2d4c3 100%);
     }
-    h1 {
-      font-size: 48px;
-      letter-spacing: 4px;
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      pointer-events: none;
+      border-radius: 50%;
+      filter: blur(54px);
+      opacity: 0.35;
+      z-index: 0;
+      animation: drift 11s var(--ease) infinite alternate;
     }
-    p {
-      color: #888;
+
+    body::before {
+      width: 44vw;
+      height: 44vw;
+      left: -11vw;
+      top: -9vw;
+      background: radial-gradient(circle at 40% 40%, rgba(91, 35, 36, 0.5), rgba(91, 35, 36, 0));
     }
-    button {
-      margin-top: 30px;
-      padding: 10px 20px;
-      background: transparent;
-      border: 1px solid #555;
-      color: #ccc;
+
+    body::after {
+      width: 38vw;
+      height: 38vw;
+      right: -10vw;
+      bottom: -10vw;
+      background: radial-gradient(circle at 55% 50%, rgba(31, 58, 48, 0.48), rgba(31, 58, 48, 0));
+      animation-delay: 1.6s;
+    }
+
+    @keyframes drift {
+      from {
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+      to {
+        transform: translate3d(0, -12px, 0) scale(1.06);
+      }
+    }
+
+    .app {
+      position: relative;
+      z-index: 2;
+      height: 100vh;
+      padding: 24px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 18px;
+    }
+
+    .title-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2px 8px;
+    }
+
+    .logo {
+      font-size: 0.88rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(35, 27, 24, 0.75);
+    }
+
+    .dynamic-word {
+      margin: 0;
+      font-size: clamp(2rem, 7.3vw, 5.4rem);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      line-height: 1;
+      color: #fffdfa;
+      text-shadow: 0 10px 36px rgba(35, 27, 24, 0.25);
+      transform: translateY(calc(var(--y, 0) * 1px)) scale(calc(1 + var(--s, 0)));
+      transition: transform 260ms var(--ease), color 260ms var(--ease), letter-spacing 260ms var(--ease);
+      will-change: transform;
+    }
+
+    .hint {
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(35, 27, 24, 0.6);
+      white-space: nowrap;
+    }
+
+    .hero {
+      position: relative;
+      border-radius: 34px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      background: linear-gradient(130deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1));
+      backdrop-filter: blur(3px);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        0 35px 55px rgba(35, 27, 24, 0.18);
+    }
+
+    .slides {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      scroll-behavior: smooth;
+      overscroll-behavior-x: contain;
+    }
+
+    .slides::-webkit-scrollbar {
+      display: none;
+    }
+
+    .slide {
+      min-width: 100%;
+      height: 100%;
+      scroll-snap-align: center;
+      padding: clamp(18px, 3.2vw, 34px);
+      display: grid;
+      align-content: start;
+      gap: 10px;
+      color: #fff8ef;
+      position: relative;
+      user-select: none;
+    }
+
+    .slide::after {
+      content: "";
+      position: absolute;
+      inset: auto 12% 14% 12%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+    }
+
+    .slide-title {
+      margin: 0;
+      font-size: clamp(1.1rem, 2vw, 1.6rem);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .slide p {
+      margin: 0;
+      width: min(52ch, 90%);
+      font-size: clamp(0.86rem, 1.25vw, 1rem);
+      line-height: 1.6;
+      color: rgba(255, 248, 239, 0.9);
+    }
+
+    .slide-1 {
+      background: radial-gradient(circle at 82% 20%, rgba(255, 255, 255, 0.22), transparent 48%),
+        linear-gradient(130deg, #7a3433 0%, #5b2324 52%, #3c1a1a 100%);
+    }
+
+    .slide-2 {
+      background: radial-gradient(circle at 10% 28%, rgba(255, 255, 255, 0.2), transparent 50%),
+        linear-gradient(130deg, #355647 0%, #1f3a30 55%, #152720 100%);
+    }
+
+    .slide-3 {
+      background: radial-gradient(circle at 82% 50%, rgba(255, 255, 255, 0.19), transparent 53%),
+        linear-gradient(130deg, #7b5f46 0%, #5b4637 50%, #433225 100%);
+    }
+
+    .slide-4 {
+      background: radial-gradient(circle at 12% 66%, rgba(255, 255, 255, 0.22), transparent 52%),
+        linear-gradient(130deg, #a79f8f 0%, #867867 46%, #615548 100%);
+    }
+
+    .mask-panel {
+      position: absolute;
+      left: clamp(10px, 2vw, 22px);
+      right: clamp(10px, 2vw, 22px);
+      bottom: clamp(12px, 2vw, 22px);
+      padding: clamp(14px, 2.1vw, 24px);
+      border-radius: 28px;
+      background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px) saturate(122%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.76),
+        0 14px 32px rgba(35, 27, 24, 0.18);
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: clamp(10px, 1.6vw, 16px);
+      z-index: 3;
+    }
+
+    .cell {
+      position: relative;
+      min-height: 124px;
+      border-radius: 20px;
+      overflow: hidden;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.4));
+      box-shadow: 0 10px 22px rgba(43, 30, 24, 0.12);
+      transition: transform 340ms var(--ease), box-shadow 340ms var(--ease), border-color 300ms var(--ease);
       cursor: pointer;
+      isolation: isolate;
     }
-    button:hover {
-      border-color: #fff;
-      color: #fff;
+
+    .cell::before {
+      content: "";
+      position: absolute;
+      inset: -45% -22%;
+      background: var(--hover-gradient, linear-gradient(140deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1)));
+      opacity: 0;
+      transform: rotate(-11deg) scale(0.96);
+      transition: opacity 280ms var(--ease), transform 380ms var(--ease);
+      z-index: -1;
+    }
+
+    .cell::after {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0));
+      pointer-events: none;
+    }
+
+    .cell:hover {
+      transform: translateY(-8px) scale(1.015);
+      border-color: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 24px 34px rgba(43, 30, 24, 0.2);
+    }
+
+    .cell:hover::before {
+      opacity: 1;
+      transform: rotate(-7deg) scale(1);
+    }
+
+    .cell h3 {
+      margin: 0;
+      font-size: 1rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .cell p {
+      margin: 10px 0 0;
+      font-size: 0.84rem;
+      line-height: 1.45;
+      color: rgba(43, 30, 24, 0.8);
+    }
+
+    .cell.games {
+      --hover-gradient: linear-gradient(135deg, rgba(127, 39, 39, 0.8), rgba(253, 206, 170, 0.45));
+    }
+
+    .cell.projects {
+      --hover-gradient: linear-gradient(135deg, rgba(33, 74, 59, 0.86), rgba(200, 232, 214, 0.42));
+    }
+
+    .cell.about {
+      --hover-gradient: linear-gradient(135deg, rgba(106, 78, 56, 0.84), rgba(233, 218, 189, 0.44));
+    }
+
+    .cell.notes {
+      --hover-gradient: linear-gradient(135deg, rgba(92, 54, 55, 0.78), rgba(225, 225, 222, 0.45));
+    }
+
+    .dots {
+      position: absolute;
+      right: 16px;
+      top: 16px;
+      display: flex;
+      gap: 8px;
+      z-index: 4;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.46);
+      transition: transform 260ms var(--ease), background 260ms var(--ease);
+    }
+
+    .dot.is-active {
+      background: #fff;
+      transform: scale(1.6);
+    }
+
+    @media (max-width: 1024px) {
+      .mask-panel {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .cell {
+        min-height: 112px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .app {
+        padding: 14px;
+        gap: 12px;
+      }
+
+      .title-wrap {
+        gap: 10px;
+      }
+
+      .hint {
+        display: none;
+      }
+
+      .hero {
+        border-radius: 24px;
+      }
+
+      .slide {
+        padding: 16px;
+      }
+
+      .mask-panel {
+        left: 8px;
+        right: 8px;
+        bottom: 8px;
+        border-radius: 20px;
+        gap: 8px;
+        padding: 10px;
+      }
+
+      .cell {
+        border-radius: 16px;
+        min-height: 95px;
+        padding: 12px;
+      }
+
+      .cell p {
+        margin-top: 8px;
+        font-size: 0.76rem;
+      }
     }
   </style>
 </head>
-
 <body>
-  <h1>antine</h1>
-  <p>a place where ideas take shape.</p>
+  <main class="app">
+    <header class="title-wrap">
+      <span class="logo">Antine Home</span>
+      <h1 class="dynamic-word" id="dynamicWord">HOME</h1>
+      <span class="hint">鼠标滚轮 / 拖动滑动</span>
+    </header>
 
-  <button onclick="enter()">enter</button>
+    <section class="hero">
+      <div class="dots" id="dots"></div>
+      <div class="slides" id="slides">
+        <article class="slide slide-1" data-word="HOME">
+          <h2 class="slide-title">Apple-style Quiet Motion</h2>
+          <p>首屏支持横向丝滑滑动，标题会跟随你的浏览节奏动态变化，整体视觉保持克制但不呆板。</p>
+        </article>
+        <article class="slide slide-2" data-word="GAMES">
+          <h2 class="slide-title">Game Archive</h2>
+          <p>展示你正在制作或收藏的游戏内容，既有复古感的色调，也保留现代界面的空间呼吸感。</p>
+        </article>
+        <article class="slide slide-3" data-word="PROJECTS">
+          <h2 class="slide-title">Project Lab</h2>
+          <p>以卡片化方式连接你的项目线索，结构清晰，适合持续扩展新作品和实验记录。</p>
+        </article>
+        <article class="slide slide-4" data-word="ABOUT">
+          <h2 class="slide-title">About Me</h2>
+          <p>个人介绍与风格摘要放在同一套视觉语言中，形成统一、稳定且有辨识度的首页体验。</p>
+        </article>
+      </div>
+
+      <div class="mask-panel">
+        <article class="cell games">
+          <h3>游戏</h3>
+          <p>收藏关卡、玩法概念与独立作品。</p>
+        </article>
+        <article class="cell projects">
+          <h3>项目</h3>
+          <p>包含开发记录、作品目录与迭代计划。</p>
+        </article>
+        <article class="cell about">
+          <h3>个人介绍</h3>
+          <p>你的背景、技能地图和创作方向。</p>
+        </article>
+        <article class="cell notes">
+          <h3>日志</h3>
+          <p>碎片灵感、近期进展和未来想法。</p>
+        </article>
+      </div>
+    </section>
+  </main>
 
   <script>
-    function enter() {
-      alert("welcome.");
+    const slides = document.getElementById("slides");
+    const dynamicWord = document.getElementById("dynamicWord");
+    const dotWrap = document.getElementById("dots");
+    const slideItems = Array.from(slides.querySelectorAll(".slide"));
+
+    let dragging = false;
+    let dragStartX = 0;
+    let startScrollLeft = 0;
+
+    function makeDots() {
+      slideItems.forEach((_, index) => {
+        const dot = document.createElement("span");
+        dot.className = "dot";
+        dot.setAttribute("aria-hidden", "true");
+        dot.addEventListener("click", () => {
+          slides.scrollTo({ left: slides.clientWidth * index, behavior: "smooth" });
+        });
+        dotWrap.appendChild(dot);
+      });
     }
+
+    function updateWord() {
+      const width = slides.clientWidth || 1;
+      const progress = slides.scrollLeft / width;
+      const active = Math.round(progress);
+      const t = progress - active;
+      const item = slideItems[Math.min(slideItems.length - 1, Math.max(0, active))];
+
+      dynamicWord.textContent = item.dataset.word || "HOME";
+      dynamicWord.style.setProperty("--y", String(Math.abs(t) * 8));
+      dynamicWord.style.setProperty("--s", String((0.06 - Math.abs(t) * 0.06).toFixed(3)));
+      dynamicWord.style.letterSpacing = `${0.1 + Math.abs(t) * 0.1}em`;
+
+      Array.from(dotWrap.children).forEach((dot, idx) => {
+        dot.classList.toggle("is-active", idx === active);
+      });
+    }
+
+    function onDragStart(event) {
+      dragging = true;
+      dragStartX = event.clientX;
+      startScrollLeft = slides.scrollLeft;
+      slides.style.scrollBehavior = "auto";
+      slides.setPointerCapture(event.pointerId);
+    }
+
+    function onDragMove(event) {
+      if (!dragging) {
+        return;
+      }
+      const delta = event.clientX - dragStartX;
+      slides.scrollLeft = startScrollLeft - delta * 1.15;
+    }
+
+    function onDragEnd(event) {
+      if (!dragging) {
+        return;
+      }
+      dragging = false;
+      slides.style.scrollBehavior = "smooth";
+      slides.releasePointerCapture(event.pointerId);
+      updateWord();
+    }
+
+    slides.addEventListener(
+      "wheel",
+      (event) => {
+        if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) {
+          return;
+        }
+        event.preventDefault();
+        slides.scrollLeft += event.deltaY;
+      },
+      { passive: false }
+    );
+
+    slides.addEventListener("pointerdown", onDragStart);
+    slides.addEventListener("pointermove", onDragMove);
+    slides.addEventListener("pointerup", onDragEnd);
+    slides.addEventListener("pointercancel", onDragEnd);
+    slides.addEventListener("scroll", updateWord, { passive: true });
+    window.addEventListener("resize", updateWord);
+
+    makeDots();
+    updateWord();
   </script>
 </body>
 </html>
