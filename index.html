@@ -6,13 +6,10 @@
   <title>Antine</title>
   <style>
     :root {
-      --ivory: #f3efe8;
       --deep-red: #5b2324;
       --forest: #1f3a30;
       --oak: #5b4637;
       --ink: #231b18;
-      --mist: rgba(255, 255, 255, 0.2);
-      --line: rgba(255, 255, 255, 0.42);
       --ease: cubic-bezier(0.2, 0.85, 0.2, 1.08);
     }
 
@@ -126,6 +123,26 @@
       white-space: nowrap;
     }
 
+    .left-unit {
+      position: relative;
+      border-radius: 28px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.52);
+      background: linear-gradient(130deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.08));
+      backdrop-filter: blur(3px);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.82),
+        0 18px 32px rgba(35, 27, 24, 0.14);
+    }
+
+    .left-title-layer {
+      position: absolute;
+      left: clamp(16px, 2.8vw, 26px);
+      top: clamp(16px, 2.8vw, 24px);
+      z-index: 4;
+      pointer-events: none;
+    }
+
     .dynamic-word {
       margin: 0;
       font-size: clamp(2rem, 5.8vw, 4.3rem);
@@ -149,33 +166,24 @@
       }
     }
 
-    .left-unit {
-      position: relative;
-      border-radius: 28px;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.52);
-      background: linear-gradient(130deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.08));
-      backdrop-filter: blur(3px);
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.82),
-        0 18px 32px rgba(35, 27, 24, 0.14);
-    }
-
     .slides {
       display: flex;
       width: 100%;
       height: 100%;
       overflow-x: auto;
-      scroll-snap-type: x proximity;
+      scroll-snap-type: x mandatory;
       scrollbar-width: none;
-      scroll-behavior: auto;
+      scroll-behavior: smooth;
       overscroll-behavior-x: contain;
       cursor: grab;
       touch-action: pan-y;
+      -webkit-overflow-scrolling: touch;
     }
 
     .slides.is-dragging {
       cursor: grabbing;
+      scroll-snap-type: none;
+      scroll-behavior: auto;
     }
 
     .slides::-webkit-scrollbar {
@@ -186,7 +194,7 @@
       min-width: 100%;
       height: 100%;
       scroll-snap-align: center;
-      padding: clamp(16px, 2.8vw, 28px);
+      padding: clamp(90px, 11vw, 120px) clamp(16px, 2.8vw, 28px) clamp(18px, 3vw, 24px);
       display: grid;
       align-content: start;
       gap: 10px;
@@ -255,23 +263,22 @@
 
     .right-rail {
       padding: clamp(14px, 2.1vw, 24px);
-      display: grid;
-      grid-template-rows: 1fr auto;
-      gap: clamp(12px, 1.8vw, 18px);
     }
 
     .preview {
       position: relative;
+      height: 100%;
       border-radius: 28px;
       overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.58);
-      background: linear-gradient(136deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 18px 30px rgba(35, 27, 24, 0.15);
+      border: none;
+      background: transparent;
+      box-shadow: 0 16px 28px rgba(35, 27, 24, 0.14);
     }
 
     .preview-bg {
       position: absolute;
       inset: 0;
+      border-radius: 28px;
       background: var(--preview-bg, linear-gradient(130deg, #7a3433 0%, #5b2324 52%, #3c1a1a 100%));
       transition: background 300ms var(--ease);
     }
@@ -288,7 +295,7 @@
       position: relative;
       z-index: 2;
       height: 100%;
-      padding: clamp(22px, 3vw, 34px);
+      padding: clamp(22px, 3vw, 34px) clamp(22px, 3vw, 34px) clamp(170px, 20vw, 190px);
       display: grid;
       align-content: start;
       gap: 14px;
@@ -324,7 +331,11 @@
     }
 
     .dock {
-      position: relative;
+      position: absolute;
+      left: clamp(22px, 3vw, 34px);
+      right: clamp(22px, 3vw, 34px);
+      bottom: clamp(18px, 2.2vw, 26px);
+      z-index: 5;
       border-radius: 22px;
       padding: clamp(8px, 1.2vw, 12px);
       background: linear-gradient(145deg, rgba(246, 240, 231, 0.44), rgba(246, 240, 231, 0.24));
@@ -337,15 +348,6 @@
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: clamp(8px, 1vw, 11px);
       align-items: stretch;
-      transform: translateY(0);
-      transition: transform 300ms var(--ease), box-shadow 300ms var(--ease);
-    }
-
-    .dock:hover {
-      transform: translateY(-2px);
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.78),
-        0 22px 34px rgba(35, 27, 24, 0.2);
     }
 
     .dock::before {
@@ -368,7 +370,7 @@
       border: 1px solid rgba(255, 255, 255, 0.44);
       background: linear-gradient(145deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.28));
       box-shadow: 0 8px 18px rgba(43, 30, 24, 0.1);
-      transition: transform 340ms var(--ease), box-shadow 340ms var(--ease), border-color 300ms var(--ease);
+      transition: transform 300ms var(--ease), box-shadow 300ms var(--ease), border-color 260ms var(--ease);
       cursor: pointer;
       isolation: isolate;
     }
@@ -380,7 +382,7 @@
       background: var(--hover-gradient, linear-gradient(140deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1)));
       opacity: 0;
       transform: rotate(-11deg) scale(0.96);
-      transition: opacity 280ms var(--ease), transform 380ms var(--ease);
+      transition: opacity 260ms var(--ease), transform 320ms var(--ease);
       z-index: -1;
     }
 
@@ -393,22 +395,17 @@
       pointer-events: none;
     }
 
-    .dock-item:hover {
-      transform: translateY(-6px) scale(1.01);
+    .dock-item:hover,
+    .dock-item.is-active {
+      transform: translateY(-5px);
       border-color: rgba(255, 255, 255, 0.9);
-      box-shadow: 0 18px 30px rgba(43, 30, 24, 0.18);
+      box-shadow: 0 16px 26px rgba(43, 30, 24, 0.18);
     }
 
     .dock-item:hover::before,
     .dock-item.is-active::before {
       opacity: 1;
       transform: rotate(-7deg) scale(1);
-    }
-
-    .dock-item.is-active {
-      transform: translateY(-5px);
-      border-color: rgba(255, 255, 255, 0.88);
-      box-shadow: 0 16px 28px rgba(43, 30, 24, 0.17);
     }
 
     .dock-item h3 {
@@ -461,6 +458,9 @@
       }
 
       .dock {
+        left: 16px;
+        right: 16px;
+        bottom: 14px;
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
@@ -480,16 +480,19 @@
       }
 
       .slide {
-        padding: 14px;
+        padding: 80px 14px 14px;
       }
 
       .preview-content {
-        padding: 16px;
+        padding: 16px 16px 146px;
       }
 
       .dock {
         border-radius: 16px;
         padding: 7px;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
       }
 
       .dock-item {
@@ -514,27 +517,26 @@
       </header>
 
       <div class="left-unit">
+        <div class="left-title-layer">
+          <h1 class="dynamic-word" id="dynamicWord">HOME</h1>
+        </div>
         <div class="dots" id="dots"></div>
         <div class="slides" id="slides">
           <article class="slide slide-1" data-word="HOME">
-            <h1 class="dynamic-word" id="dynamicWord">HOME</h1>
             <h2 class="slide-title">Left Unit / Home</h2>
             <p>左侧是独立滑动单元，呼吸标题与滑动进度同步变化。</p>
           </article>
           <article class="slide slide-2" data-word="GAMES">
-            <h1 class="dynamic-word">GAMES</h1>
             <h2 class="slide-title">Left Unit / Games</h2>
-            <p>在这个区域浏览游戏分区，视觉语言和右栏保持一致。</p>
+            <p>这里用于浏览游戏分区，保持稳定节奏和滑动触感。</p>
           </article>
           <article class="slide slide-3" data-word="PROJECTS">
-            <h1 class="dynamic-word">PROJECTS</h1>
             <h2 class="slide-title">Left Unit / Projects</h2>
-            <p>左栏是引导与节奏控制，右栏对应展示更完整的模块内容。</p>
+            <p>左栏仅作为独立浏览区，不再驱动右栏任何内容变化。</p>
           </article>
           <article class="slide slide-4" data-word="ABOUT">
-            <h1 class="dynamic-word">ABOUT</h1>
             <h2 class="slide-title">Left Unit / About</h2>
-            <p>保持复古浅色系，交互反馈柔和且具有液态玻璃层次。</p>
+            <p>保留复古色调，交互细节更丝滑，不与右侧联动。</p>
           </article>
         </div>
       </div>
@@ -546,7 +548,7 @@
         <div class="preview-content">
           <span class="preview-tag" id="previewTag">Games</span>
           <h2 class="preview-title" id="previewTitle">游戏中枢</h2>
-          <p class="preview-text" id="previewText">这里展示玻璃坞当前选中项目的详细界面。点击下方项目，右侧内容会即时联动更新。</p>
+          <p class="preview-text" id="previewText">右侧为独立内容区。下方玻璃坞作为上层覆盖于主体底部，点击项目只切换右侧展示，不影响左侧滑动单元。</p>
         </div>
       </article>
 
@@ -576,6 +578,7 @@
     const dynamicWord = document.getElementById("dynamicWord");
     const dotWrap = document.getElementById("dots");
     const slideItems = Array.from(slides.querySelectorAll(".slide"));
+
     const dock = document.getElementById("dock");
     const dockItems = Array.from(dock.querySelectorAll(".dock-item"));
     const previewTag = document.getElementById("previewTag");
@@ -587,25 +590,25 @@
       games: {
         tag: "Games",
         title: "游戏中枢",
-        text: "游戏相关的进度、概念、视觉草图与玩法实验都聚合在这里，保持简洁但可扩展。",
+        text: "游戏相关进度、概念图与玩法实验聚合在这里，布局留出扩展空间。",
         bg: "radial-gradient(circle at 18% 18%, rgba(255,255,255,0.24), transparent 42%), linear-gradient(130deg, #7a3433 0%, #5b2324 52%, #3c1a1a 100%)"
       },
       projects: {
         tag: "Projects",
         title: "项目实验室",
-        text: "从需求草稿到上线记录，用统一界面管理多条项目线，便于持续迭代与回顾。",
+        text: "把需求、阶段记录和发布节点放进同一视图，便于回顾与迭代。",
         bg: "radial-gradient(circle at 80% 16%, rgba(255,255,255,0.22), transparent 40%), linear-gradient(130deg, #355647 0%, #1f3a30 55%, #152720 100%)"
       },
       about: {
         tag: "About",
         title: "个人介绍",
-        text: "展示你的风格、方法与长期创作方向，用沉稳的棕色基调建立辨识度。",
+        text: "展示你的方法与风格，通过克制排版表达稳定的个人辨识度。",
         bg: "radial-gradient(circle at 24% 20%, rgba(255,255,255,0.24), transparent 44%), linear-gradient(130deg, #7b5f46 0%, #5b4637 50%, #433225 100%)"
       },
       notes: {
         tag: "Notes",
         title: "灵感日志",
-        text: "记录近期进展、阶段目标和灵感碎片，作为长期内容沉淀与追踪的入口。",
+        text: "记录近期目标与碎片灵感，逐步沉淀为可追踪的长期内容资产。",
         bg: "radial-gradient(circle at 82% 24%, rgba(255,255,255,0.24), transparent 43%), linear-gradient(130deg, #a79f8f 0%, #867867 46%, #615548 100%)"
       }
     };
@@ -615,9 +618,13 @@
     let startScrollLeft = 0;
     let lastX = 0;
     let lastMoveTime = 0;
-    let velocity = 0;
-    let momentumFrame = 0;
+    let dragVelocity = 0;
+    let releaseTarget = 0;
+    let inertialFrame = 0;
+    let inertialSnapTimer = 0;
     let wheelSnapTimer = 0;
+    let wheelTarget = 0;
+    let wheelFrame = 0;
 
     function makeDots() {
       slideItems.forEach((_, index) => {
@@ -639,7 +646,7 @@
       const item = slideItems[Math.min(slideItems.length - 1, Math.max(0, active))];
 
       dynamicWord.textContent = item.dataset.word || "HOME";
-      dynamicWord.style.setProperty("--y", String(Math.abs(t) * 8));
+      dynamicWord.style.setProperty("--y", String(Math.abs(t) * 7));
       dynamicWord.style.setProperty("--s", String((0.07 - Math.abs(t) * 0.07).toFixed(3)));
       dynamicWord.style.letterSpacing = `${0.1 + Math.abs(t) * 0.1}em`;
 
@@ -654,34 +661,64 @@
       slides.scrollTo({ left: target, behavior: "smooth" });
     }
 
-    function stopMomentum() {
-      if (momentumFrame) {
-        cancelAnimationFrame(momentumFrame);
-        momentumFrame = 0;
+    function clampTarget(value) {
+      const max = Math.max(0, slides.scrollWidth - slides.clientWidth);
+      return Math.max(0, Math.min(value, max));
+    }
+
+    function stopInertia() {
+      if (inertialFrame) {
+        cancelAnimationFrame(inertialFrame);
+        inertialFrame = 0;
+      }
+      window.clearTimeout(inertialSnapTimer);
+    }
+
+    function stopWheelLerp() {
+      if (wheelFrame) {
+        cancelAnimationFrame(wheelFrame);
+        wheelFrame = 0;
       }
     }
 
-    function startMomentum() {
-      stopMomentum();
+    function runReleaseInertia() {
+      stopInertia();
+      releaseTarget = clampTarget(releaseTarget);
 
-      const run = () => {
-        slides.scrollLeft -= velocity;
-        velocity *= 0.92;
+      const tick = () => {
+        const delta = releaseTarget - slides.scrollLeft;
+        slides.scrollLeft += delta * 0.16;
 
-        if (Math.abs(velocity) > 0.2) {
-          momentumFrame = requestAnimationFrame(run);
+        if (Math.abs(delta) > 0.45) {
+          inertialFrame = requestAnimationFrame(tick);
           return;
         }
 
-        stopMomentum();
-        snapToNearest();
+        stopInertia();
+        inertialSnapTimer = window.setTimeout(snapToNearest, 70);
       };
 
-      if (Math.abs(velocity) > 0.4) {
-        momentumFrame = requestAnimationFrame(run);
-      } else {
-        snapToNearest();
+      inertialFrame = requestAnimationFrame(tick);
+    }
+
+    function runWheelLerp() {
+      if (wheelFrame) {
+        return;
       }
+
+      const tick = () => {
+        const delta = wheelTarget - slides.scrollLeft;
+        slides.scrollLeft += delta * 0.22;
+
+        if (Math.abs(delta) > 0.5) {
+          wheelFrame = requestAnimationFrame(tick);
+          return;
+        }
+
+        stopWheelLerp();
+      };
+
+      wheelFrame = requestAnimationFrame(tick);
     }
 
     function onDragStart(event) {
@@ -690,8 +727,9 @@
       startScrollLeft = slides.scrollLeft;
       lastX = event.clientX;
       lastMoveTime = performance.now();
-      velocity = 0;
-      stopMomentum();
+      dragVelocity = 0;
+      stopInertia();
+      stopWheelLerp();
       slides.classList.add("is-dragging");
       slides.setPointerCapture(event.pointerId);
     }
@@ -700,13 +738,14 @@
       if (!dragging) {
         return;
       }
+
       const delta = event.clientX - dragStartX;
       slides.scrollLeft = startScrollLeft - delta;
 
       const now = performance.now();
       const dt = Math.max(1, now - lastMoveTime);
       const dx = event.clientX - lastX;
-      velocity = dx / dt * 16;
+      dragVelocity = dx / dt;
       lastX = event.clientX;
       lastMoveTime = now;
     }
@@ -715,10 +754,12 @@
       if (!dragging) {
         return;
       }
+
       dragging = false;
       slides.classList.remove("is-dragging");
       slides.releasePointerCapture(event.pointerId);
-      startMomentum();
+      releaseTarget = slides.scrollLeft - dragVelocity * 220;
+      runReleaseInertia();
     }
 
     function setPreview(key) {
@@ -737,24 +778,19 @@
       });
     }
 
-    function syncPreviewWithSlide() {
-      const width = slides.clientWidth || 1;
-      const active = Math.round(slides.scrollLeft / width);
-      const map = ["games", "projects", "about", "notes"];
-      setPreview(map[Math.min(map.length - 1, Math.max(0, active))]);
-    }
-
     slides.addEventListener(
       "wheel",
       (event) => {
         if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) {
           return;
         }
+
         event.preventDefault();
-        stopMomentum();
-        slides.scrollLeft += event.deltaY * 0.92;
+        stopInertia();
+        wheelTarget = clampTarget((wheelTarget || slides.scrollLeft) + event.deltaY * 0.95);
+        runWheelLerp();
         window.clearTimeout(wheelSnapTimer);
-        wheelSnapTimer = window.setTimeout(snapToNearest, 110);
+        wheelSnapTimer = window.setTimeout(snapToNearest, 120);
       },
       { passive: false }
     );
@@ -763,26 +799,12 @@
     slides.addEventListener("pointermove", onDragMove);
     slides.addEventListener("pointerup", onDragEnd);
     slides.addEventListener("pointercancel", onDragEnd);
-    slides.addEventListener("scroll", () => {
-      updateWord();
-      syncPreviewWithSlide();
-    }, { passive: true });
+    slides.addEventListener("scroll", updateWord, { passive: true });
     window.addEventListener("resize", updateWord);
 
     dockItems.forEach((item) => {
       item.addEventListener("click", () => {
-        const key = item.dataset.key;
-        const map = {
-          games: 0,
-          projects: 1,
-          about: 2,
-          notes: 3
-        };
-        setPreview(key);
-        slides.scrollTo({
-          left: slides.clientWidth * (map[key] || 0),
-          behavior: "smooth"
-        });
+        setPreview(item.dataset.key);
       });
     });
 
