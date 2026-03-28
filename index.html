@@ -85,14 +85,15 @@
       position: relative;
       min-height: 0;
       border-radius: 34px;
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      background: linear-gradient(130deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.09));
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.76), 0 30px 54px rgba(35, 27, 24, 0.18);
       overflow: hidden;
-      backdrop-filter: blur(4px);
     }
 
     .left-rail {
+      border-radius: 34px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      background: linear-gradient(130deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.09));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.76), 0 30px 54px rgba(35, 27, 24, 0.18);
+      backdrop-filter: blur(4px);
       display: grid;
       grid-template-rows: auto 1fr;
       gap: 10px;
@@ -170,24 +171,10 @@
       display: flex;
       width: 100%;
       height: 100%;
-      overflow-x: auto;
+      overflow: hidden;
       scroll-snap-type: x mandatory;
-      scrollbar-width: none;
       scroll-behavior: smooth;
-      overscroll-behavior-x: contain;
-      cursor: grab;
-      touch-action: pan-y;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .slides.is-dragging {
-      cursor: grabbing;
-      scroll-snap-type: none;
-      scroll-behavior: auto;
-    }
-
-    .slides::-webkit-scrollbar {
-      display: none;
+      scrollbar-width: none;
     }
 
     .slide {
@@ -239,36 +226,52 @@
         linear-gradient(130deg, #a79f8f 0%, #867867 46%, #615548 100%);
     }
 
-    .dots {
+    .left-nav {
       position: absolute;
-      right: 14px;
-      top: 14px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
       display: flex;
-      gap: 8px;
+      gap: 10px;
       z-index: 4;
     }
 
-    .dot {
-      width: 8px;
-      height: 8px;
+    .nav-btn {
+      width: 44px;
+      height: 44px;
+      border: 1px solid rgba(255, 255, 255, 0.7);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.46);
-      transition: transform 260ms var(--ease), background 260ms var(--ease);
+      background: linear-gradient(140deg, rgba(255, 255, 255, 0.36), rgba(255, 255, 255, 0.2));
+      color: #fff;
+      font-size: 1.25rem;
+      line-height: 1;
+      cursor: pointer;
+      backdrop-filter: blur(9px);
+      transition: transform 220ms var(--ease), box-shadow 220ms var(--ease), border-color 220ms var(--ease);
     }
 
-    .dot.is-active {
-      background: #fff;
-      transform: scale(1.55);
+    .nav-btn:hover {
+      transform: translateY(-2px) scale(1.04);
+      border-color: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 12px 24px rgba(35, 27, 24, 0.24);
+    }
+
+    .nav-btn:active {
+      transform: scale(0.97);
     }
 
     .right-rail {
-      padding: clamp(14px, 2.1vw, 24px);
+      border: none;
+      background: transparent;
+      box-shadow: none;
+      backdrop-filter: none;
+      padding: 0;
     }
 
     .preview {
       position: relative;
       height: 100%;
-      border-radius: 28px;
+      border-radius: inherit;
       overflow: hidden;
       border: none;
       background: transparent;
@@ -278,7 +281,7 @@
     .preview-bg {
       position: absolute;
       inset: 0;
-      border-radius: 28px;
+      border-radius: inherit;
       background: var(--preview-bg, linear-gradient(130deg, #7a3433 0%, #5b2324 52%, #3c1a1a 100%));
       transition: background 300ms var(--ease);
     }
@@ -291,15 +294,51 @@
       pointer-events: none;
     }
 
-    .preview-content {
+    .preview-fixed {
       position: relative;
-      z-index: 2;
-      height: 100%;
-      padding: clamp(22px, 3vw, 34px) clamp(22px, 3vw, 34px) clamp(170px, 20vw, 190px);
+      z-index: 4;
+      padding: clamp(18px, 2.4vw, 26px);
+      pointer-events: none;
+    }
+
+    .glass-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 1.1rem;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0.16));
+      backdrop-filter: blur(12px);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 10px 20px rgba(35, 27, 24, 0.22);
+    }
+
+    .preview-scroll {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: clamp(84px, 11vw, 110px) clamp(22px, 3vw, 34px) clamp(176px, 22vw, 200px);
       display: grid;
       align-content: start;
       gap: 14px;
       color: #fff9f0;
+    }
+
+    .preview-scroll::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .preview-scroll::-webkit-scrollbar-thumb {
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.34);
+    }
+
+    .preview-scroll::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.08);
     }
 
     .preview-tag {
@@ -328,6 +367,15 @@
       font-size: clamp(0.85rem, 1.2vw, 1rem);
       line-height: 1.65;
       color: rgba(255, 249, 240, 0.92);
+    }
+
+    .preview-more {
+      margin: 0;
+      width: min(56ch, 95%);
+      font-size: clamp(0.84rem, 1.16vw, 0.98rem);
+      line-height: 1.7;
+      color: rgba(255, 249, 240, 0.9);
+      white-space: pre-line;
     }
 
     .dock {
@@ -457,6 +505,11 @@
         min-height: 46vh;
       }
 
+      .nav-btn {
+        width: 40px;
+        height: 40px;
+      }
+
       .dock {
         left: 16px;
         right: 16px;
@@ -483,8 +536,12 @@
         padding: 80px 14px 14px;
       }
 
-      .preview-content {
-        padding: 16px 16px 146px;
+      .preview-fixed {
+        padding: 12px;
+      }
+
+      .preview-scroll {
+        padding: 76px 16px 146px;
       }
 
       .dock {
@@ -513,14 +570,17 @@
     <section class="left-rail">
       <header class="left-head">
         <p class="logo">Antine Left Rail</p>
-        <p class="hint">拖动 / 滚轮</p>
+        <p class="hint">左右方向键切换</p>
       </header>
 
       <div class="left-unit">
         <div class="left-title-layer">
           <h1 class="dynamic-word" id="dynamicWord">HOME</h1>
         </div>
-        <div class="dots" id="dots"></div>
+        <div class="left-nav">
+          <button class="nav-btn" id="prevBtn" aria-label="上一页">&#8249;</button>
+          <button class="nav-btn" id="nextBtn" aria-label="下一页">&#8250;</button>
+        </div>
         <div class="slides" id="slides">
           <article class="slide slide-1" data-word="HOME">
             <h2 class="slide-title">Left Unit / Home</h2>
@@ -545,10 +605,14 @@
     <section class="right-rail">
       <article class="preview" id="preview">
         <div class="preview-bg" id="previewBg"></div>
-        <div class="preview-content">
+        <div class="preview-fixed">
+          <div class="glass-icon" aria-hidden="true">◈</div>
+        </div>
+        <div class="preview-scroll" id="previewScroll">
           <span class="preview-tag" id="previewTag">Games</span>
           <h2 class="preview-title" id="previewTitle">游戏中枢</h2>
           <p class="preview-text" id="previewText">右侧为独立内容区。下方玻璃坞作为上层覆盖于主体底部，点击项目只切换右侧展示，不影响左侧滑动单元。</p>
+          <p class="preview-more" id="previewMore">该区域支持长文本滚动展示。向下滚动可阅读详细内容，标题属于文本流的一部分，因此会跟随内容一起滚动。上方玻璃 ICON 固定不动，保持界面识别锚点。</p>
         </div>
       </article>
 
@@ -576,190 +640,65 @@
   <script>
     const slides = document.getElementById("slides");
     const dynamicWord = document.getElementById("dynamicWord");
-    const dotWrap = document.getElementById("dots");
     const slideItems = Array.from(slides.querySelectorAll(".slide"));
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
 
     const dock = document.getElementById("dock");
     const dockItems = Array.from(dock.querySelectorAll(".dock-item"));
     const previewTag = document.getElementById("previewTag");
     const previewTitle = document.getElementById("previewTitle");
     const previewText = document.getElementById("previewText");
+    const previewMore = document.getElementById("previewMore");
     const previewBg = document.getElementById("previewBg");
+    const previewScroll = document.getElementById("previewScroll");
 
     const previewData = {
       games: {
         tag: "Games",
         title: "游戏中枢",
         text: "游戏相关进度、概念图与玩法实验聚合在这里，布局留出扩展空间。",
+        more: "- 收录玩法原型、场景基调和核心机制\n- 按阶段归档: 设定 -> 原型 -> 可玩版本 -> 打磨\n- 每个条目支持状态标记，便于快速筛选\n\n这里是长文本示例区域。继续向下滚动可以承载更完整的项目记录、关卡笔记、视觉参考和版本迭代说明。",
         bg: "radial-gradient(circle at 18% 18%, rgba(255,255,255,0.24), transparent 42%), linear-gradient(130deg, #7a3433 0%, #5b2324 52%, #3c1a1a 100%)"
       },
       projects: {
         tag: "Projects",
         title: "项目实验室",
         text: "把需求、阶段记录和发布节点放进同一视图，便于回顾与迭代。",
+        more: "- 统一管理 Web / 游戏 / 工具型项目\n- 同步里程碑、风险项和复盘备注\n- 把关键决策写成可追踪的日志\n\n该内容区域可持续扩展为很长文本。滚动时标题也会随文本上移，而顶部玻璃 ICON 仍固定，形成稳定视觉锚点。",
         bg: "radial-gradient(circle at 80% 16%, rgba(255,255,255,0.22), transparent 40%), linear-gradient(130deg, #355647 0%, #1f3a30 55%, #152720 100%)"
       },
       about: {
         tag: "About",
         title: "个人介绍",
         text: "展示你的方法与风格，通过克制排版表达稳定的个人辨识度。",
+        more: "- 个人方法论: 从概念发散到结构收敛\n- 技能侧重: 前端交互、视觉系统、信息组织\n- 长期方向: 做有节奏感和记忆点的作品\n\n这一段用于模拟人物介绍的长内容：可以继续补充履历、代表作品、工作方式以及偏好的协作流程。",
         bg: "radial-gradient(circle at 24% 20%, rgba(255,255,255,0.24), transparent 44%), linear-gradient(130deg, #7b5f46 0%, #5b4637 50%, #433225 100%)"
       },
       notes: {
         tag: "Notes",
         title: "灵感日志",
         text: "记录近期目标与碎片灵感，逐步沉淀为可追踪的长期内容资产。",
+        more: "- 每日短记: 问题、想法、验证结果\n- 每周整理: 把碎片合并为可执行条目\n- 每月复盘: 输出改进策略\n\n长文本滚动区可作为持续写作空间，用来沉淀灵感、草稿与反思，不会挤压底部玻璃坞的交互区域。",
         bg: "radial-gradient(circle at 82% 24%, rgba(255,255,255,0.24), transparent 43%), linear-gradient(130deg, #a79f8f 0%, #867867 46%, #615548 100%)"
       }
     };
 
-    let dragging = false;
-    let dragStartX = 0;
-    let startScrollLeft = 0;
-    let lastX = 0;
-    let lastMoveTime = 0;
-    let dragVelocity = 0;
-    let releaseTarget = 0;
-    let inertialFrame = 0;
-    let inertialSnapTimer = 0;
-    let wheelSnapTimer = 0;
-    let wheelTarget = 0;
-    let wheelFrame = 0;
-
-    function makeDots() {
-      slideItems.forEach((_, index) => {
-        const dot = document.createElement("span");
-        dot.className = "dot";
-        dot.setAttribute("aria-hidden", "true");
-        dot.addEventListener("click", () => {
-          slides.scrollTo({ left: slides.clientWidth * index, behavior: "smooth" });
-        });
-        dotWrap.appendChild(dot);
-      });
-    }
+    let currentSlide = 0;
 
     function updateWord() {
-      const width = slides.clientWidth || 1;
-      const progress = slides.scrollLeft / width;
-      const active = Math.round(progress);
-      const t = progress - active;
-      const item = slideItems[Math.min(slideItems.length - 1, Math.max(0, active))];
+      const item = slideItems[currentSlide];
 
       dynamicWord.textContent = item.dataset.word || "HOME";
-      dynamicWord.style.setProperty("--y", String(Math.abs(t) * 7));
-      dynamicWord.style.setProperty("--s", String((0.07 - Math.abs(t) * 0.07).toFixed(3)));
-      dynamicWord.style.letterSpacing = `${0.1 + Math.abs(t) * 0.1}em`;
-
-      Array.from(dotWrap.children).forEach((dot, idx) => {
-        dot.classList.toggle("is-active", idx === active);
-      });
+      dynamicWord.style.setProperty("--y", "0");
+      dynamicWord.style.setProperty("--s", "0.07");
+      dynamicWord.style.letterSpacing = "0.12em";
     }
 
-    function snapToNearest() {
-      const width = slides.clientWidth || 1;
-      const target = Math.round(slides.scrollLeft / width) * width;
-      slides.scrollTo({ left: target, behavior: "smooth" });
-    }
-
-    function clampTarget(value) {
-      const max = Math.max(0, slides.scrollWidth - slides.clientWidth);
-      return Math.max(0, Math.min(value, max));
-    }
-
-    function stopInertia() {
-      if (inertialFrame) {
-        cancelAnimationFrame(inertialFrame);
-        inertialFrame = 0;
-      }
-      window.clearTimeout(inertialSnapTimer);
-    }
-
-    function stopWheelLerp() {
-      if (wheelFrame) {
-        cancelAnimationFrame(wheelFrame);
-        wheelFrame = 0;
-      }
-    }
-
-    function runReleaseInertia() {
-      stopInertia();
-      releaseTarget = clampTarget(releaseTarget);
-
-      const tick = () => {
-        const delta = releaseTarget - slides.scrollLeft;
-        slides.scrollLeft += delta * 0.16;
-
-        if (Math.abs(delta) > 0.45) {
-          inertialFrame = requestAnimationFrame(tick);
-          return;
-        }
-
-        stopInertia();
-        inertialSnapTimer = window.setTimeout(snapToNearest, 70);
-      };
-
-      inertialFrame = requestAnimationFrame(tick);
-    }
-
-    function runWheelLerp() {
-      if (wheelFrame) {
-        return;
-      }
-
-      const tick = () => {
-        const delta = wheelTarget - slides.scrollLeft;
-        slides.scrollLeft += delta * 0.22;
-
-        if (Math.abs(delta) > 0.5) {
-          wheelFrame = requestAnimationFrame(tick);
-          return;
-        }
-
-        stopWheelLerp();
-      };
-
-      wheelFrame = requestAnimationFrame(tick);
-    }
-
-    function onDragStart(event) {
-      dragging = true;
-      dragStartX = event.clientX;
-      startScrollLeft = slides.scrollLeft;
-      lastX = event.clientX;
-      lastMoveTime = performance.now();
-      dragVelocity = 0;
-      stopInertia();
-      stopWheelLerp();
-      slides.classList.add("is-dragging");
-      slides.setPointerCapture(event.pointerId);
-    }
-
-    function onDragMove(event) {
-      if (!dragging) {
-        return;
-      }
-
-      const delta = event.clientX - dragStartX;
-      slides.scrollLeft = startScrollLeft - delta;
-
-      const now = performance.now();
-      const dt = Math.max(1, now - lastMoveTime);
-      const dx = event.clientX - lastX;
-      dragVelocity = dx / dt;
-      lastX = event.clientX;
-      lastMoveTime = now;
-    }
-
-    function onDragEnd(event) {
-      if (!dragging) {
-        return;
-      }
-
-      dragging = false;
-      slides.classList.remove("is-dragging");
-      slides.releasePointerCapture(event.pointerId);
-      releaseTarget = slides.scrollLeft - dragVelocity * 220;
-      runReleaseInertia();
+    function goToSlide(index) {
+      currentSlide = Math.max(0, Math.min(index, slideItems.length - 1));
+      slides.scrollTo({ left: slides.clientWidth * currentSlide, behavior: "smooth" });
+      updateWord();
     }
 
     function setPreview(key) {
@@ -771,36 +710,19 @@
       previewTag.textContent = data.tag;
       previewTitle.textContent = data.title;
       previewText.textContent = data.text;
+      previewMore.textContent = data.more;
       previewBg.style.setProperty("--preview-bg", data.bg);
+      previewScroll.scrollTo({ top: 0, behavior: "smooth" });
 
       dockItems.forEach((item) => {
         item.classList.toggle("is-active", item.dataset.key === key);
       });
     }
 
-    slides.addEventListener(
-      "wheel",
-      (event) => {
-        if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) {
-          return;
-        }
+    prevBtn.addEventListener("click", () => goToSlide(currentSlide - 1));
+    nextBtn.addEventListener("click", () => goToSlide(currentSlide + 1));
 
-        event.preventDefault();
-        stopInertia();
-        wheelTarget = clampTarget((wheelTarget || slides.scrollLeft) + event.deltaY * 0.95);
-        runWheelLerp();
-        window.clearTimeout(wheelSnapTimer);
-        wheelSnapTimer = window.setTimeout(snapToNearest, 120);
-      },
-      { passive: false }
-    );
-
-    slides.addEventListener("pointerdown", onDragStart);
-    slides.addEventListener("pointermove", onDragMove);
-    slides.addEventListener("pointerup", onDragEnd);
-    slides.addEventListener("pointercancel", onDragEnd);
-    slides.addEventListener("scroll", updateWord, { passive: true });
-    window.addEventListener("resize", updateWord);
+    window.addEventListener("resize", () => goToSlide(currentSlide));
 
     dockItems.forEach((item) => {
       item.addEventListener("click", () => {
@@ -808,7 +730,6 @@
       });
     });
 
-    makeDots();
     updateWord();
     setPreview("games");
   </script>
