@@ -11,9 +11,8 @@
       --forest: #1f3a30;
       --oak: #5b4637;
       --ink: #231b18;
-      --mist: rgba(255, 255, 255, 0.22);
-      --line: rgba(255, 255, 255, 0.45);
-      --panel: rgba(246, 240, 231, 0.74);
+      --mist: rgba(255, 255, 255, 0.2);
+      --line: rgba(255, 255, 255, 0.42);
       --ease: cubic-bezier(0.2, 0.85, 0.2, 1.08);
     }
 
@@ -24,7 +23,7 @@
     html,
     body {
       width: 100%;
-      min-height: 100%;
+      height: 100%;
       margin: 0;
       color: var(--ink);
       overflow: hidden;
@@ -77,58 +76,89 @@
     .app {
       position: relative;
       z-index: 2;
-      height: 100vh;
+      height: 100%;
       padding: 24px;
       display: grid;
-      grid-template-rows: auto 1fr;
-      gap: 18px;
+      grid-template-columns: 2fr 3fr;
+      gap: clamp(14px, 2vw, 24px);
     }
 
-    .title-wrap {
+    .left-rail,
+    .right-rail {
+      position: relative;
+      min-height: 0;
+      border-radius: 34px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      background: linear-gradient(130deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.09));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.76), 0 30px 54px rgba(35, 27, 24, 0.18);
+      overflow: hidden;
+      backdrop-filter: blur(4px);
+    }
+
+    .left-rail {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 10px;
+      padding: clamp(14px, 2.1vw, 22px);
+    }
+
+    .left-head {
       display: flex;
-      align-items: center;
+      align-items: baseline;
       justify-content: space-between;
-      padding: 2px 8px;
+      gap: 12px;
     }
 
     .logo {
-      font-size: 0.88rem;
+      margin: 0;
+      font-size: 0.8rem;
       letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: rgba(35, 27, 24, 0.75);
+      color: rgba(35, 27, 24, 0.72);
+    }
+
+    .hint {
+      margin: 0;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(35, 27, 24, 0.56);
+      white-space: nowrap;
     }
 
     .dynamic-word {
       margin: 0;
-      font-size: clamp(2rem, 7.3vw, 5.4rem);
-      letter-spacing: 0.15em;
+      font-size: clamp(2rem, 5.8vw, 4.3rem);
+      letter-spacing: 0.13em;
       text-transform: uppercase;
       line-height: 1;
       color: #fffdfa;
-      text-shadow: 0 10px 36px rgba(35, 27, 24, 0.25);
+      text-shadow: 0 10px 34px rgba(35, 27, 24, 0.22);
       transform: translateY(calc(var(--y, 0) * 1px)) scale(calc(1 + var(--s, 0)));
-      transition: transform 260ms var(--ease), color 260ms var(--ease), letter-spacing 260ms var(--ease);
-      will-change: transform;
+      transition: letter-spacing 220ms var(--ease), filter 220ms var(--ease);
+      animation: breathe 3s ease-in-out infinite;
     }
 
-    .hint {
-      font-size: 0.76rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: rgba(35, 27, 24, 0.6);
-      white-space: nowrap;
+    @keyframes breathe {
+      0%,
+      100% {
+        filter: brightness(1);
+      }
+      50% {
+        filter: brightness(1.12);
+      }
     }
 
-    .hero {
+    .left-unit {
       position: relative;
-      border-radius: 34px;
+      border-radius: 28px;
       overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      background: linear-gradient(130deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1));
+      border: 1px solid rgba(255, 255, 255, 0.52);
+      background: linear-gradient(130deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.08));
       backdrop-filter: blur(3px);
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.8),
-        0 35px 55px rgba(35, 27, 24, 0.18);
+        inset 0 1px 0 rgba(255, 255, 255, 0.82),
+        0 18px 32px rgba(35, 27, 24, 0.14);
     }
 
     .slides {
@@ -156,7 +186,7 @@
       min-width: 100%;
       height: 100%;
       scroll-snap-align: center;
-      padding: clamp(18px, 3.2vw, 34px);
+      padding: clamp(16px, 2.8vw, 28px);
       display: grid;
       align-content: start;
       gap: 10px;
@@ -165,17 +195,9 @@
       user-select: none;
     }
 
-    .slide::after {
-      content: "";
-      position: absolute;
-      inset: auto 12% 14% 12%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
-    }
-
     .slide-title {
       margin: 0;
-      font-size: clamp(1.1rem, 2vw, 1.6rem);
+      font-size: clamp(1rem, 1.7vw, 1.34rem);
       letter-spacing: 0.07em;
       text-transform: uppercase;
       font-weight: 600;
@@ -183,9 +205,9 @@
 
     .slide p {
       margin: 0;
-      width: min(52ch, 90%);
-      font-size: clamp(0.86rem, 1.25vw, 1rem);
-      line-height: 1.6;
+      width: min(34ch, 90%);
+      font-size: clamp(0.8rem, 1.1vw, 0.95rem);
+      line-height: 1.55;
       color: rgba(255, 248, 239, 0.9);
     }
 
@@ -209,116 +231,10 @@
         linear-gradient(130deg, #a79f8f 0%, #867867 46%, #615548 100%);
     }
 
-    .mask-panel {
-      position: absolute;
-      left: 50%;
-      bottom: clamp(12px, 2vw, 20px);
-      width: min(920px, calc(100% - 24px));
-      transform: translateX(-50%);
-      padding: clamp(10px, 1.5vw, 16px);
-      border-radius: 24px;
-      background: linear-gradient(145deg, rgba(246, 240, 231, 0.42), rgba(246, 240, 231, 0.26));
-      border: 1px solid rgba(255, 255, 255, 0.62);
-      backdrop-filter: blur(24px) saturate(132%);
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.72),
-        0 24px 42px rgba(35, 27, 24, 0.2);
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: clamp(8px, 1.2vw, 12px);
-      z-index: 3;
-    }
-
-    .mask-panel::before {
-      content: "";
-      position: absolute;
-      inset: -16px 14% auto;
-      height: 18px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0));
-      filter: blur(9px);
-      pointer-events: none;
-    }
-
-    .cell {
-      position: relative;
-      min-height: 96px;
-      border-radius: 16px;
-      overflow: hidden;
-      padding: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.44);
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.28));
-      box-shadow: 0 8px 18px rgba(43, 30, 24, 0.1);
-      transition: transform 340ms var(--ease), box-shadow 340ms var(--ease), border-color 300ms var(--ease);
-      cursor: pointer;
-      isolation: isolate;
-    }
-
-    .cell::before {
-      content: "";
-      position: absolute;
-      inset: -45% -22%;
-      background: var(--hover-gradient, linear-gradient(140deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1)));
-      opacity: 0;
-      transform: rotate(-11deg) scale(0.96);
-      transition: opacity 280ms var(--ease), transform 380ms var(--ease);
-      z-index: -1;
-    }
-
-    .cell::after {
-      content: "";
-      position: absolute;
-      inset: 1px;
-      border-radius: 14px;
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0));
-      pointer-events: none;
-    }
-
-    .cell:hover {
-      transform: translateY(-6px) scale(1.01);
-      border-color: rgba(255, 255, 255, 0.9);
-      box-shadow: 0 18px 30px rgba(43, 30, 24, 0.18);
-    }
-
-    .cell:hover::before {
-      opacity: 1;
-      transform: rotate(-7deg) scale(1);
-    }
-
-    .cell h3 {
-      margin: 0;
-      font-size: 0.92rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .cell p {
-      margin: 8px 0 0;
-      font-size: 0.76rem;
-      line-height: 1.38;
-      color: rgba(43, 30, 24, 0.8);
-    }
-
-    .cell.games {
-      --hover-gradient: linear-gradient(135deg, rgba(127, 39, 39, 0.8), rgba(253, 206, 170, 0.45));
-    }
-
-    .cell.projects {
-      --hover-gradient: linear-gradient(135deg, rgba(33, 74, 59, 0.86), rgba(200, 232, 214, 0.42));
-    }
-
-    .cell.about {
-      --hover-gradient: linear-gradient(135deg, rgba(106, 78, 56, 0.84), rgba(233, 218, 189, 0.44));
-    }
-
-    .cell.notes {
-      --hover-gradient: linear-gradient(135deg, rgba(92, 54, 55, 0.78), rgba(225, 225, 222, 0.45));
-    }
-
     .dots {
       position: absolute;
-      right: 16px;
-      top: 16px;
+      right: 14px;
+      top: 14px;
       display: flex;
       gap: 8px;
       z-index: 4;
@@ -334,57 +250,255 @@
 
     .dot.is-active {
       background: #fff;
-      transform: scale(1.6);
+      transform: scale(1.55);
     }
 
-    @media (max-width: 1024px) {
-      .mask-panel {
-        width: min(680px, calc(100% - 20px));
+    .right-rail {
+      padding: clamp(14px, 2.1vw, 24px);
+      display: grid;
+      grid-template-rows: 1fr auto;
+      gap: clamp(12px, 1.8vw, 18px);
+    }
+
+    .preview {
+      position: relative;
+      border-radius: 28px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.58);
+      background: linear-gradient(136deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 18px 30px rgba(35, 27, 24, 0.15);
+    }
+
+    .preview-bg {
+      position: absolute;
+      inset: 0;
+      background: var(--preview-bg, linear-gradient(130deg, #7a3433 0%, #5b2324 52%, #3c1a1a 100%));
+      transition: background 300ms var(--ease);
+    }
+
+    .preview-bg::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 24% 18%, rgba(255, 255, 255, 0.22), transparent 42%);
+      pointer-events: none;
+    }
+
+    .preview-content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      padding: clamp(22px, 3vw, 34px);
+      display: grid;
+      align-content: start;
+      gap: 14px;
+      color: #fff9f0;
+    }
+
+    .preview-tag {
+      display: inline-flex;
+      width: fit-content;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.52);
+      background: rgba(255, 255, 255, 0.16);
+      letter-spacing: 0.08em;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+    }
+
+    .preview-title {
+      margin: 0;
+      font-size: clamp(1.3rem, 2.6vw, 2.2rem);
+      line-height: 1.15;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .preview-text {
+      margin: 0;
+      width: min(56ch, 95%);
+      font-size: clamp(0.85rem, 1.2vw, 1rem);
+      line-height: 1.65;
+      color: rgba(255, 249, 240, 0.92);
+    }
+
+    .dock {
+      position: relative;
+      border-radius: 22px;
+      padding: clamp(8px, 1.2vw, 12px);
+      background: linear-gradient(145deg, rgba(246, 240, 231, 0.44), rgba(246, 240, 231, 0.24));
+      border: 1px solid rgba(255, 255, 255, 0.62);
+      backdrop-filter: blur(24px) saturate(132%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.74),
+        0 18px 30px rgba(35, 27, 24, 0.17);
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: clamp(8px, 1vw, 11px);
+      align-items: stretch;
+      transform: translateY(0);
+      transition: transform 300ms var(--ease), box-shadow 300ms var(--ease);
+    }
+
+    .dock:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.78),
+        0 22px 34px rgba(35, 27, 24, 0.2);
+    }
+
+    .dock::before {
+      content: "";
+      position: absolute;
+      inset: -15px 14% auto;
+      height: 18px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0));
+      filter: blur(9px);
+      pointer-events: none;
+    }
+
+    .dock-item {
+      position: relative;
+      min-height: 96px;
+      border-radius: 16px;
+      overflow: hidden;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.44);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.28));
+      box-shadow: 0 8px 18px rgba(43, 30, 24, 0.1);
+      transition: transform 340ms var(--ease), box-shadow 340ms var(--ease), border-color 300ms var(--ease);
+      cursor: pointer;
+      isolation: isolate;
+    }
+
+    .dock-item::before {
+      content: "";
+      position: absolute;
+      inset: -45% -22%;
+      background: var(--hover-gradient, linear-gradient(140deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1)));
+      opacity: 0;
+      transform: rotate(-11deg) scale(0.96);
+      transition: opacity 280ms var(--ease), transform 380ms var(--ease);
+      z-index: -1;
+    }
+
+    .dock-item::after {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0));
+      pointer-events: none;
+    }
+
+    .dock-item:hover {
+      transform: translateY(-6px) scale(1.01);
+      border-color: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 18px 30px rgba(43, 30, 24, 0.18);
+    }
+
+    .dock-item:hover::before,
+    .dock-item.is-active::before {
+      opacity: 1;
+      transform: rotate(-7deg) scale(1);
+    }
+
+    .dock-item.is-active {
+      transform: translateY(-5px);
+      border-color: rgba(255, 255, 255, 0.88);
+      box-shadow: 0 16px 28px rgba(43, 30, 24, 0.17);
+    }
+
+    .dock-item h3 {
+      margin: 0;
+      font-size: 0.92rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .dock-item p {
+      margin: 8px 0 0;
+      font-size: 0.76rem;
+      line-height: 1.38;
+      color: rgba(43, 30, 24, 0.8);
+    }
+
+    .dock-item.games {
+      --hover-gradient: linear-gradient(135deg, rgba(127, 39, 39, 0.8), rgba(253, 206, 170, 0.45));
+    }
+
+    .dock-item.projects {
+      --hover-gradient: linear-gradient(135deg, rgba(33, 74, 59, 0.86), rgba(200, 232, 214, 0.42));
+    }
+
+    .dock-item.about {
+      --hover-gradient: linear-gradient(135deg, rgba(106, 78, 56, 0.84), rgba(233, 218, 189, 0.44));
+    }
+
+    .dock-item.notes {
+      --hover-gradient: linear-gradient(135deg, rgba(92, 54, 55, 0.78), rgba(225, 225, 222, 0.45));
+    }
+
+    @media (max-width: 1100px) {
+      .app {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .left-rail,
+      .right-rail {
+        border-radius: 24px;
+      }
+
+      .left-rail {
+        min-height: 42vh;
+      }
+
+      .right-rail {
+        min-height: 46vh;
+      }
+
+      .dock {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .cell {
+      .dock-item {
         min-height: 88px;
       }
     }
 
     @media (max-width: 640px) {
       .app {
-        padding: 14px;
+        padding: 10px;
         gap: 12px;
       }
 
-      .title-wrap {
+      .left-head {
         gap: 10px;
       }
 
-      .hint {
-        display: none;
-      }
-
-      .hero {
-        border-radius: 24px;
-      }
-
       .slide {
+        padding: 14px;
+      }
+
+      .preview-content {
         padding: 16px;
       }
 
-      .mask-panel {
-        width: calc(100% - 14px);
-        bottom: 8px;
-        border-radius: 18px;
-        gap: 8px;
-        padding: 8px;
+      .dock {
+        border-radius: 16px;
+        padding: 7px;
       }
 
-      .cell {
+      .dock-item {
         border-radius: 14px;
         min-height: 82px;
         padding: 10px;
       }
 
-      .cell p {
+      .dock-item p {
         margin-top: 6px;
         font-size: 0.72rem;
       }
@@ -393,49 +507,65 @@
 </head>
 <body>
   <main class="app">
-    <header class="title-wrap">
-      <span class="logo">Antine Home</span>
-      <h1 class="dynamic-word" id="dynamicWord">HOME</h1>
-      <span class="hint">鼠标滚轮 / 拖动滑动</span>
-    </header>
+    <section class="left-rail">
+      <header class="left-head">
+        <p class="logo">Antine Left Rail</p>
+        <p class="hint">拖动 / 滚轮</p>
+      </header>
 
-    <section class="hero">
-      <div class="dots" id="dots"></div>
-      <div class="slides" id="slides">
-        <article class="slide slide-1" data-word="HOME">
-          <h2 class="slide-title">Apple-style Quiet Motion</h2>
-          <p>首屏支持横向丝滑滑动，标题会跟随你的浏览节奏动态变化，整体视觉保持克制但不呆板。</p>
-        </article>
-        <article class="slide slide-2" data-word="GAMES">
-          <h2 class="slide-title">Game Archive</h2>
-          <p>展示你正在制作或收藏的游戏内容，既有复古感的色调，也保留现代界面的空间呼吸感。</p>
-        </article>
-        <article class="slide slide-3" data-word="PROJECTS">
-          <h2 class="slide-title">Project Lab</h2>
-          <p>以卡片化方式连接你的项目线索，结构清晰，适合持续扩展新作品和实验记录。</p>
-        </article>
-        <article class="slide slide-4" data-word="ABOUT">
-          <h2 class="slide-title">About Me</h2>
-          <p>个人介绍与风格摘要放在同一套视觉语言中，形成统一、稳定且有辨识度的首页体验。</p>
-        </article>
+      <div class="left-unit">
+        <div class="dots" id="dots"></div>
+        <div class="slides" id="slides">
+          <article class="slide slide-1" data-word="HOME">
+            <h1 class="dynamic-word" id="dynamicWord">HOME</h1>
+            <h2 class="slide-title">Left Unit / Home</h2>
+            <p>左侧是独立滑动单元，呼吸标题与滑动进度同步变化。</p>
+          </article>
+          <article class="slide slide-2" data-word="GAMES">
+            <h1 class="dynamic-word">GAMES</h1>
+            <h2 class="slide-title">Left Unit / Games</h2>
+            <p>在这个区域浏览游戏分区，视觉语言和右栏保持一致。</p>
+          </article>
+          <article class="slide slide-3" data-word="PROJECTS">
+            <h1 class="dynamic-word">PROJECTS</h1>
+            <h2 class="slide-title">Left Unit / Projects</h2>
+            <p>左栏是引导与节奏控制，右栏对应展示更完整的模块内容。</p>
+          </article>
+          <article class="slide slide-4" data-word="ABOUT">
+            <h1 class="dynamic-word">ABOUT</h1>
+            <h2 class="slide-title">Left Unit / About</h2>
+            <p>保持复古浅色系，交互反馈柔和且具有液态玻璃层次。</p>
+          </article>
+        </div>
       </div>
+    </section>
 
-      <div class="mask-panel">
-        <article class="cell games">
+    <section class="right-rail">
+      <article class="preview" id="preview">
+        <div class="preview-bg" id="previewBg"></div>
+        <div class="preview-content">
+          <span class="preview-tag" id="previewTag">Games</span>
+          <h2 class="preview-title" id="previewTitle">游戏中枢</h2>
+          <p class="preview-text" id="previewText">这里展示玻璃坞当前选中项目的详细界面。点击下方项目，右侧内容会即时联动更新。</p>
+        </div>
+      </article>
+
+      <div class="dock" id="dock">
+        <article class="dock-item games is-active" data-key="games">
           <h3>游戏</h3>
-          <p>收藏关卡、玩法概念与独立作品。</p>
+          <p>收藏关卡与玩法原型。</p>
         </article>
-        <article class="cell projects">
+        <article class="dock-item projects" data-key="projects">
           <h3>项目</h3>
-          <p>包含开发记录、作品目录与迭代计划。</p>
+          <p>作品目录与开发轨迹。</p>
         </article>
-        <article class="cell about">
+        <article class="dock-item about" data-key="about">
           <h3>个人介绍</h3>
-          <p>你的背景、技能地图和创作方向。</p>
+          <p>背景、技能与方向。</p>
         </article>
-        <article class="cell notes">
+        <article class="dock-item notes" data-key="notes">
           <h3>日志</h3>
-          <p>碎片灵感、近期进展和未来想法。</p>
+          <p>近期进度与碎片想法。</p>
         </article>
       </div>
     </section>
@@ -446,6 +576,39 @@
     const dynamicWord = document.getElementById("dynamicWord");
     const dotWrap = document.getElementById("dots");
     const slideItems = Array.from(slides.querySelectorAll(".slide"));
+    const dock = document.getElementById("dock");
+    const dockItems = Array.from(dock.querySelectorAll(".dock-item"));
+    const previewTag = document.getElementById("previewTag");
+    const previewTitle = document.getElementById("previewTitle");
+    const previewText = document.getElementById("previewText");
+    const previewBg = document.getElementById("previewBg");
+
+    const previewData = {
+      games: {
+        tag: "Games",
+        title: "游戏中枢",
+        text: "游戏相关的进度、概念、视觉草图与玩法实验都聚合在这里，保持简洁但可扩展。",
+        bg: "radial-gradient(circle at 18% 18%, rgba(255,255,255,0.24), transparent 42%), linear-gradient(130deg, #7a3433 0%, #5b2324 52%, #3c1a1a 100%)"
+      },
+      projects: {
+        tag: "Projects",
+        title: "项目实验室",
+        text: "从需求草稿到上线记录，用统一界面管理多条项目线，便于持续迭代与回顾。",
+        bg: "radial-gradient(circle at 80% 16%, rgba(255,255,255,0.22), transparent 40%), linear-gradient(130deg, #355647 0%, #1f3a30 55%, #152720 100%)"
+      },
+      about: {
+        tag: "About",
+        title: "个人介绍",
+        text: "展示你的风格、方法与长期创作方向，用沉稳的棕色基调建立辨识度。",
+        bg: "radial-gradient(circle at 24% 20%, rgba(255,255,255,0.24), transparent 44%), linear-gradient(130deg, #7b5f46 0%, #5b4637 50%, #433225 100%)"
+      },
+      notes: {
+        tag: "Notes",
+        title: "灵感日志",
+        text: "记录近期进展、阶段目标和灵感碎片，作为长期内容沉淀与追踪的入口。",
+        bg: "radial-gradient(circle at 82% 24%, rgba(255,255,255,0.24), transparent 43%), linear-gradient(130deg, #a79f8f 0%, #867867 46%, #615548 100%)"
+      }
+    };
 
     let dragging = false;
     let dragStartX = 0;
@@ -477,7 +640,7 @@
 
       dynamicWord.textContent = item.dataset.word || "HOME";
       dynamicWord.style.setProperty("--y", String(Math.abs(t) * 8));
-      dynamicWord.style.setProperty("--s", String((0.06 - Math.abs(t) * 0.06).toFixed(3)));
+      dynamicWord.style.setProperty("--s", String((0.07 - Math.abs(t) * 0.07).toFixed(3)));
       dynamicWord.style.letterSpacing = `${0.1 + Math.abs(t) * 0.1}em`;
 
       Array.from(dotWrap.children).forEach((dot, idx) => {
@@ -558,6 +721,29 @@
       startMomentum();
     }
 
+    function setPreview(key) {
+      const data = previewData[key];
+      if (!data) {
+        return;
+      }
+
+      previewTag.textContent = data.tag;
+      previewTitle.textContent = data.title;
+      previewText.textContent = data.text;
+      previewBg.style.setProperty("--preview-bg", data.bg);
+
+      dockItems.forEach((item) => {
+        item.classList.toggle("is-active", item.dataset.key === key);
+      });
+    }
+
+    function syncPreviewWithSlide() {
+      const width = slides.clientWidth || 1;
+      const active = Math.round(slides.scrollLeft / width);
+      const map = ["games", "projects", "about", "notes"];
+      setPreview(map[Math.min(map.length - 1, Math.max(0, active))]);
+    }
+
     slides.addEventListener(
       "wheel",
       (event) => {
@@ -577,11 +763,32 @@
     slides.addEventListener("pointermove", onDragMove);
     slides.addEventListener("pointerup", onDragEnd);
     slides.addEventListener("pointercancel", onDragEnd);
-    slides.addEventListener("scroll", updateWord, { passive: true });
+    slides.addEventListener("scroll", () => {
+      updateWord();
+      syncPreviewWithSlide();
+    }, { passive: true });
     window.addEventListener("resize", updateWord);
+
+    dockItems.forEach((item) => {
+      item.addEventListener("click", () => {
+        const key = item.dataset.key;
+        const map = {
+          games: 0,
+          projects: 1,
+          about: 2,
+          notes: 3
+        };
+        setPreview(key);
+        slides.scrollTo({
+          left: slides.clientWidth * (map[key] || 0),
+          behavior: "smooth"
+        });
+      });
+    });
 
     makeDots();
     updateWord();
+    setPreview("games");
   </script>
 </body>
 </html>
